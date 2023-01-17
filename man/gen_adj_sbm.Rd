@@ -19,6 +19,8 @@ Generate adjacency matrix from Stochastic Block Model
 }
 \examples{
 library(csgc)
+k = 4
+n = 200
 prob = c(0.8, 0.1)
 K = matrix(prob[2],k,k)
 diag(K) = prob[1]
