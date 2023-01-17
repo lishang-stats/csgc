@@ -2,3 +2,4 @@
 ^renv\.lock$
 ^csgc\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$
