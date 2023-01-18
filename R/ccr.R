@@ -9,6 +9,7 @@
 #' @importFrom iterpc iterpc getall
 #' @import foreach
 #' @import doParallel
+#' @import parallel
 #'
 #' @examples
 #' library(csgc)

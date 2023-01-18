@@ -12,6 +12,7 @@
 #' @importFrom purrr map
 #' @import foreach
 #' @import doParallel
+#' @import parallel
 #'
 #' @export
 #'
