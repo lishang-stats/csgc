@@ -24,7 +24,7 @@
 #' z = rep(1:k,each=n/k)
 #' A = gen_adj_sbm(K,z)$A
 #' z0 = reg.SP(A,k)$cluster
-#' greedy(A,z0)
+#' csgc_greedy(A,z0)
 csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
   # required package: purrr, foreach, doParallel
   # INPUT

@@ -32,5 +32,5 @@ K = matrix(c(0.8, 0.5, 0.5, 0.1), k, k)
 z = rep(1:k,each=n/k)
 A = gen_adj_sbm(K,z)$A
 z0 = reg.SP(A,k)$cluster
-greedy(A,z0)
+csgc_greedy(A,z0)
 }
