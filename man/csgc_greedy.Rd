@@ -25,12 +25,11 @@ and the corresponding chi-square statistics, under stochastic block model
 }
 \examples{
 library(csgc)
-library(randnet)
 k = 2
 n = 400
 K = matrix(c(0.8, 0.5, 0.5, 0.1), k, k)
 z = rep(1:k,each=n/k)
 A = gen_adj_sbm(K,z)$A
-z0 = reg.SP(A,k)$cluster
+z0 = spectral_sbm(A,k)
 csgc_greedy(A,z0)
 }
