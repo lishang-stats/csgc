@@ -13,7 +13,9 @@ RoxygenNote: 7.1.2
 Imports: 
     doParallel,
     foreach,
+    irlba,
     iterpc,
     purrr,
     rootSolve,
+    stats,
     zoo
