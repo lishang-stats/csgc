@@ -27,7 +27,7 @@ spectral_dcsbm <- function(A,k){
   # OUTPUT
   # labels: estimated labels
   V = irlba(A,k)$v
-  vr = apply(irlba(A,k)$v,1,function(x) sqrt(sum(x^2)))
+  vr = apply(V,1,function(x) sqrt(sum(x^2)))
   reg.V = diag(1/vr) %*% V
   labels = kmeans(reg.V, k)$cluster
   return(labels)

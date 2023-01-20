@@ -30,11 +30,11 @@ ccr <- function(label_true, label_est, parallel=F){
   I = iterpc(k,k,ordered = T)
   all_perm = getall(I)
   if (!parallel){
-    miscls = numeric()
+    ccr_all = numeric()
     label_est = factor(label_est)
     for (i in 1:factorial(k)){
       levels(label_est) = all_perm[i,]
-      miscls[i] = sum(label_est!=label_true)
+      ccr_all[i] = sum(label_est==label_true)
     }
   } else {
     num_perm <- nrow(all_perm)
@@ -44,14 +44,14 @@ ccr <- function(label_true, label_est, parallel=F){
     }
     cl <- makeCluster(detectCores())
     registerDoParallel(cl)
-    miscls <- foreach(iter=1:num_perm,.combine = 'rbind') %dopar% {
+    ccr_all <- foreach(iter=1:num_perm,.combine ='rbind') %dopar% {
       perm <- all_perm[iter, ]
       member_mat_perm <- member_mat[, perm]
       label_perm <- apply(member_mat_perm, 1, function(x) which(x == 1))
-      return(sum(label_perm != label_true))
+      return(sum(label_perm==label_true))
     }
     stopCluster(cl)
   }
-  ccr = 1-min(miscls)/n
+  ccr = max(ccr_all)/n
   return(ccr)
 }
