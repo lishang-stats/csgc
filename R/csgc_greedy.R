@@ -51,7 +51,7 @@ csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
       k_list = 1:k
       for (iter in 1:(n*(k-1))){
         r = ceiling(iter/(k-1))
-        s = ifelse(iter%%(k-1)==0, iter%%(k-1)+(k-1), iter%%(k-1))
+        s = iter-(r-1)*(k-1)
         zhat = zadj
         zhat[r] = k_list[k_list!=zhat[r]][s]
         zhat_list[[iter]] = zhat
@@ -78,7 +78,7 @@ csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
                      .export = ls(environment(sbm_mle))) %dopar% {
                        res = list()
                        r = ceiling(iter/(k-1))
-                       s = ifelse(iter%%(k-1)==0, iter%%(k-1)+(k-1), iter%%(k-1))
+                       s = iter-(r-1)*(k-1)
                        zhat = zadj
                        zhat[r] = k_list[k_list!=zhat[r]][s]
                        res$z = zhat_list[[iter]] = zhat
