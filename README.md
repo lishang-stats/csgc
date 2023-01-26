@@ -22,7 +22,7 @@ devtools::install_github("lishang-stats/csgc")
 ## Example
 
 Assume an undirected network has $n$ vertices, with $A=(A_{ij})_{nn}$ be
-the adjacency matrix and $`A_{ii}= 0`$ for all $i$. Suppose the
+the adjacency matrix and `$A_{ii}= 0$` for all $i$. Suppose the
 parameter matrix is $K=(k_{rs})_{k\times k}$. Let $z=(z_1,\dots,z_n)$ be
 the label vector, where $z_i=r$ means the $i$-th vertex is in group $r$.
 Consider the Bernoulli-type Stochastic Block Model, i.e.
