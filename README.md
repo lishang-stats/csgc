@@ -27,10 +27,9 @@ The parameter matrix $K$ (a $k$ by $k$ matrix) presents the connection
 probability within/between each block. Let $z$ be the label vector with
 length $n$, where each entry can be from $1$ to $k$. Consider the
 Bernoulli-type Stochastic Block Model
-\[equation\](<a href="https://latex.codecogs.com/png.image?\dpi%7B200%7DA_%7Bij%7D=A_%7Bji%7D\overset%7Bi.i.d" class="uri">https://latex.codecogs.com/png.image?\dpi{200}A_{ij}=A_{ji}\overset{i.i.d</a>.}{}
-(k\_{z_iz_j}, ).
-
-We first generate matrix $A$ and $P$ from $K$ and $z$.
+![equation](https://latex.codecogs.com/png.latex?A_%7Bij%7D=A_%7Bji%7D\overset%7Bi.i.d.%7D%7B\sim%7D%20\mathop%7B\mathrm%7BBe%7D%7D\left(k_%7Bz_iz_j%7D\right))
+for $1\leq i,j\leq n, i\ne j$. We first generate matrix $A$ and $P$ from
+$K$ and $z$.
 
 ``` r
 set.seed(123)
@@ -42,9 +41,9 @@ library(csgc)
 #>     trace
 k = 4
 n = 100
-K = matrix(c(0.8, 0.5, 0.1, 0.1, 
-             0.5, 0.1, 0.1, 0.1, 
-             0.1, 0.1, 0.8, 0.5, 
+K = matrix(c(0.8, 0.5, 0.1, 0.1,
+             0.5, 0.1, 0.1, 0.1,
+             0.1, 0.1, 0.8, 0.5,
              0.1, 0.1, 0.5, 0.1),4,4)
 z = rep(1:k,each=n/k)
 mat = gen_adj_sbm(K,z)
@@ -177,9 +176,9 @@ ccr(z,zout)
 
 Assume further that $\theta_i$ is the degree parameter for vertex $i$.
 Consider the Poisson-type Degree Corrected Stochastic Block Model
-\[equation\](<a href="https://latex.codecogs.com/png.image?\dpi%7B200%7DA_%7Bij%7D=A_%7Bji%7D\overset%7Bi.i.d" class="uri">https://latex.codecogs.com/png.image?\dpi{200}A_{ij}=A_{ji}\overset{i.i.d</a>.}{}
-(\_i *j k*{z_iz_j}, ). We can generate matrix $A$ and $P$ from $K$ and
-$\Theta$ and $z$.
+![equation](https://latex.codecogs.com/png.latex?A_%7Bij%7D=A_%7Bji%7D\overset%7Bi.i.d.%7D%7B\sim%7D%20\mathop%7B\mathrm%7BPo%7D%7D\left(\theta_i%20\theta_j%20k_%7Bz_iz_j%7D\right))
+for $1\leq i,j\leq n, i\ne j$. We can generate matrix $A$ and $P$ from
+$K$ and $\Theta$ and $z$.
 
 ``` r
 Theta = runif(n,.8,1)
