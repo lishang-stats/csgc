@@ -31,12 +31,22 @@ devtools::install_github("lishang-stats/csgc")
 
 ## Example
 
-Assume an undirected network has $n$ vertices, with $A=(A_{ij})_{nn}$ be the adjacency matrix and `$A_{ii}=0$` for all $i$. Suppose the parameter matrix is $K=(k_{rs})_{k\times k}$. Let $z=(z_1,\dots,z_n)$ be the label vector, where $z_i=r$ means the $i$-th vertex is in group $r$. Consider the Bernoulli-type Stochastic Block Model, i.e.
-$$A_{ij}=A_{ji}\overset{i.i.d.}{\sim} \text{Be}(k_{z_iz_j})$$
-for $1\leq i,j\leq n, i\ne j$. We first generate matrix $A$ and $P$ from $K$.
+Assume an undirected unweighted network has $n$ vertices, with $A$ be the adjacency matrix and $P$ be the corresponding probability matrix. The parameter matrix $K$ (a $k$ by $k$ matrix) presents the connection probability within/between each block. Let $z$ be the label vector with length $n$, where each entry can be from $1$ to $k$. Consider the Bernoulli-type Stochastic Block Model
+![equation](https://latex.codecogs.com/png.image?\dpi{200}A_{ij}=A_{ji}\overset{i.i.d.}{\sim} \mathop{\mathrm{Be}}(k_{z_iz_j}), \quad\text{for $1\leq i,j\leq n, i\ne j$})
+. We first generate matrix $A$ and $P$ from $K$.
 
 ```{r example}
+set.seed(123)
 library(csgc)
+k = 4
+n = 200
+K = matrix(0,k,k)
+K[upper.tri(K,diag=T)] = runif(k*(k+1)/2)
+K[lower.tri(K,diag=T)] = t(K)[lower.tri(K,diag=T)]
+z = rep(1:k,each=n/k)
+# mat = gen_adj_sbm(K,z)
+# A = mat$A
+# P = mat$P
 ## basic example code
 ```
 
