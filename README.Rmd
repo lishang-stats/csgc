@@ -32,7 +32,7 @@ devtools::install_github("lishang-stats/csgc")
 ## csgc: SBM
 
 Assume an undirected unweighted network has $n$ vertices, with $A$ be the adjacency matrix and $P$ be the corresponding probability matrix. The parameter matrix $K$ (a $k$ by $k$ matrix) presents the connection probability within/between each block. Let $z$ be the label vector with length $n$, where each entry can be from $1$ to $k$. Consider the Bernoulli-type Stochastic Block Model
-![equation](https://latex.codecogs.com/png.latex?A_{ij}=A_{ji}\overset{i.i.d.}{\sim} \mathop{\mathrm{Be}}\left(k_{z_iz_j}\right))
+![equation](https://latex.codecogs.com/svg.latex?A_{ij}=A_{ji}\overset{i.i.d.}{\sim} \mathop{\mathrm{Be}}\left(k_{z_iz_j}\right))
 for $1\leq i,j\leq n, i\ne j$. We first generate matrix $A$ and $P$ from $K$ and $z$.
 
 ```{r gen_sbm}
@@ -95,7 +95,7 @@ ccr(z,zout)
 
 ## csgc: DCSBM
 Assume further that $\theta_i$ is the degree parameter for vertex $i$. Consider the Poisson-type Degree Corrected Stochastic Block Model
-![equation](https://latex.codecogs.com/png.latex?A_{ij}=A_{ji}\overset{i.i.d.}{\sim}%20\mathop{\mathrm{Po}}\left(\theta_i%20\theta_j%20k_{z_iz_j}\right))
+![equation](https://latex.codecogs.com/svg.latex?A_{ij}=A_{ji}\overset{i.i.d.}{\sim}%20\mathop{\mathrm{Po}}\left(\theta_i%20\theta_j%20k_{z_iz_j}\right))
 for $1\leq i,j\leq n, i\ne j$. We can generate matrix $A$ and $P$ from $K$ and $\Theta$ and $z$.
 
 ```{r gen_dcsbm}
