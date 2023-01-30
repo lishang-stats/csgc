@@ -69,7 +69,6 @@ csgc = function(A, P, var.structure=c("binomial", "poisson")) {
   Yh.2 = Yh*Yh
   Yh.3 = Yh.2*Yh
   Yh.4 = Yh.3*Yh
-  Yh.5 = Yh.4*Yh
   Yhp.2.1 = Yh.2 %*% Yh
   Yhp.2.2 = Yh.2 %*% Yh.2
   Yhp.2.2.1 = Yhp.2.2 %*% Yh
@@ -96,7 +95,6 @@ csgc = function(A, P, var.structure=c("binomial", "poisson")) {
   vr.2 = vr*vr
   vr.3 = vr.2*vr
   vr.4 = vr.3*vr
-  vr.5 = vr.4*vr
   vrp.2.1 = vr.2 %*% vr
   vrp.2.2 = vr.2 %*% vr.2
   vrp.2.2.1 = vrp.2.2 %*% vr
