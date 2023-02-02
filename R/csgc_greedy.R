@@ -6,8 +6,15 @@
 #' @param var.structure allow choose of binomial/poisson model, default is binomial
 #' @param parallel allow use parallel computing, default is FALSE
 #'
-#' @return initial community labels/chi-square statistic/csgc statistics, optimised
-#' community labels/chi-square statistic/csgc statistics
+#' @return zin: initial community labels \cr
+#' chisqin: initial chi-square statistic \cr
+#' statsin: initial csgc statistics \cr
+#' zout: optimised community labels \cr
+#' chisqout: optimised chi-square statistic \cr
+#' statsout: optimised csgc statistics \cr
+#' zlog: record of community labels at each step \cr
+#' chisqlog: record of chi-square statistic at each step \cr
+#'
 #'
 #' @importFrom purrr map
 #' @import foreach
@@ -105,8 +112,11 @@ csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
   Pout = sbm_mle(A,zout)$P
   stats = csgc(A,Pout,var.structure)$t
   ans = list(zin=z0, chisqin=chisq0,statsin=stats0,
-             zout=zout, chisqout=chisqout, statsout=stats)
+             zout=zout, chisqout=chisqout, statsout=stats,
+             zlog = zadj_list[1:(length(zadj_list)-1)],
+             chisqlog = unlist(chisqadj_list[1:(length(chisqadj_list)-1)]))
   names(ans) = c("zin","chisqin","statsin",
-                 "zout", "chisqout", "statsout")
+                 "zout", "chisqout", "statsout",
+                 "zlog", "chisqlog")
   return(ans)
 }

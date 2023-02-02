@@ -16,8 +16,14 @@ csgc_greedy(A, z0, var.structure = "binomial", parallel = F)
 \item{parallel}{allow use parallel computing, default is FALSE}
 }
 \value{
-initial community labels/chi-square statistic/csgc statistics, optimised
-community labels/chi-square statistic/csgc statistics
+zin: initial community labels \cr
+chisqin: initial chi-square statistic \cr
+statsin: initial csgc statistics \cr
+zout: optimised community labels \cr
+chisqout: optimised chi-square statistic \cr
+statsout: optimised csgc statistics \cr
+zlog: record of community labels at each step \cr
+chisqlog: record of chi-square statistic at each step \cr
 }
 \description{
 Use csgc greedy algorithm to obtain optimised community labels
