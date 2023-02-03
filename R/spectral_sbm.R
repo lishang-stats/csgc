@@ -26,7 +26,7 @@ spectral_sbm <- function(A,k){
   #
   # OUTPUT
   # labels: estimated labels
-  V = irlba(A,k)$v
+  V = irlba(A+mean(colSums(A))/nrow(A),k)$v
   labels = kmeans(V,k)$cluster
   return(labels)
 }
