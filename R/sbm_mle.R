@@ -29,7 +29,7 @@ sbm_mle <- function(A,z){
   k = length(unique(z))
   n = dim(A)[1]
   K = matrix(0,k,k)
-  if (k==1){ K[1,1] = sum(A)*2 / ((n-1)*n) }
+  if (k==1){ K[1,1] = sum(A) / ((n-1)*n) }
   else {
     for (i in 1:(k-1)){
       for (j in (i+1):k){
