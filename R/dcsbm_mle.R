@@ -39,9 +39,9 @@ dcsbm_mle <- function(A,z){
     }
   }
   deg = rowSums(A)
-  Theta0 = Theta = numeric(0)
+  Theta0 = Theta = numeric(n)
   for (j in 1:k){
-    Theta0[z==j] = deg[z==j]/sum(deg[z==j])
+    Theta0[z==j] = ifelse(sum(deg[z==j])==0,0,deg[z==j]/sum(deg[z==j]))
   }
   f = function(x) {
     Thetasq_r = sum(x^2)
