@@ -6,15 +6,17 @@
 #' @param var.structure allow choose of binomial/poisson model, default is binomial
 #' @param parallel allow use parallel computing, default is FALSE
 #'
-#' @return zin: initial community labels \cr
-#' chisqin: initial chi-square statistic \cr
-#' statsin: initial csgc statistics \cr
-#' zout: optimised community labels \cr
-#' chisqout: optimised chi-square statistic \cr
-#' statsout: optimised csgc statistics \cr
-#' zlog: record of community labels at each step \cr
-#' chisqlog: record of chi-square statistic at each step \cr
-#'
+#' @return A list of initial/optimized/record values
+#' \itemize{
+#'    \item zin - initial community labels.
+#'    \item chisqin - initial chi-square statistic.
+#'    \item statsin - initial csgc statistics.
+#'    \item zout - optimised community labels.
+#'    \item chisqout - optimised chi-square statistic.
+#'    \item statsout - optimised csgc statistics.
+#'    \item zlog - record of community labels at each step.
+#'    \item chisqlog - record of chi-square statistic at each step.
+#'}
 #'
 #' @importFrom purrr map
 #' @import foreach
@@ -107,16 +109,21 @@ csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
     }
   }
   # retrieve updated labels from second last step
-  zout = zadj_list[[length(zadj_list)-1]]
-  chisqout = chisqadj_list[[length(chisqadj_list)-1]]
-  Pout = sbm_mle(A,zout)$P
-  stats = csgc(A,Pout,var.structure)$t
-  ans = list(zin=z0, chisqin=chisq0,statsin=stats0,
-             zout=zout, chisqout=chisqout, statsout=stats,
-             zlog = zadj_list[1:(length(zadj_list)-1)],
-             chisqlog = unlist(chisqadj_list[1:(length(chisqadj_list)-1)]))
-  names(ans) = c("zin","chisqin","statsin",
-                 "zout", "chisqout", "statsout",
-                 "zlog", "chisqlog")
-  return(ans)
+  if (length(zadj_list)==1){
+    message("There is no change after csgc greedy algorithm!")
+  }
+  else{
+    zout = zadj_list[[length(zadj_list)-1]]
+    chisqout = chisqadj_list[[length(chisqadj_list)-1]]
+    Pout = sbm_mle(A,zout)$P
+    stats = csgc(A,Pout,var.structure)$t
+    ans = list(zin=z0, chisqin=chisq0,statsin=stats0,
+               zout=zout, chisqout=chisqout, statsout=stats,
+               zlog = zadj_list[1:(length(zadj_list)-1)],
+               chisqlog = unlist(chisqadj_list[1:(length(chisqadj_list)-1)]))
+    names(ans) = c("zin","chisqin","statsin",
+                   "zout", "chisqout", "statsout",
+                   "zlog", "chisqlog")
+    return(ans)
+  }
 }
