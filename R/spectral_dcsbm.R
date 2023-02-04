@@ -29,6 +29,6 @@ spectral_dcsbm <- function(A,k){
   V = irlba(A+mean(colSums(A))/nrow(A),k)$v
   vr = apply(V,1,function(x) sqrt(sum(x^2)))
   reg.V = diag(1/vr) %*% V
-  labels = kmeans(reg.V, k)$cluster
+  labels = kmeans(reg.V,k,nstart=30,iter.max=100)$cluster
   return(labels)
 }
