@@ -99,17 +99,16 @@ Assume further that $\theta_i$ is the degree parameter for vertex $i$. Consider 
 for $1\leq i,j\leq n, i\ne j$. We can generate matrix $A$ and $P$ from $K$ and $\Theta$ and $z$.
 
 ```{r gen_dcsbm}
-Theta = runif(n,.8,1)
+Theta = runif(n,.2,1)
 dmat = gen_adj_dcsbm(K,Theta,z)
 dA = dmat$A
 dP = dmat$P
 ```
 
-Though no closed form, numerical MLE for $K$ and $P$ can be obtained, assuming $A$ and true labels $z$ are known.
+Though no closed form, numerical MLE for $P$ can be obtained, assuming $A$ and true labels $z$ are known.
 
 ```{r dcsbm_mle}
 dmat2 = dcsbm_mle(dA,z)
-dKhat = mat2$K
 dPhat = mat2$P
 ```
 

@@ -14,7 +14,7 @@
 #' prob = c(0.8, 0.1)
 #' K = matrix(prob[2],k,k)
 #' diag(K) = prob[1]
-#' Theta = runif(n,0.8,1)
+#' Theta = runif(n,0.2,1)
 #' z = rep(1:k,each=n/k)
 #' gen_adj_dcsbm(K,Theta,z)
 

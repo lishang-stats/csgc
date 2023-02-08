@@ -95,7 +95,7 @@ on \[0,1\].
 ``` r
 p = runif(100)
 wasserstein_uniform(p)
-#> [1] 0.02510469
+#> [1] 0.07193143
 ```
 
 If these csgc statistics are deviate from 0, we can use our csgc greedy
@@ -189,18 +189,17 @@ for $1\leq i,j\leq n, i\ne j$. We can generate matrix $A$ and $P$ from
 $K$ and $\Theta$ and $z$.
 
 ``` r
-Theta = runif(n,.8,1)
+Theta = runif(n,.2,1)
 dmat = gen_adj_dcsbm(K,Theta,z)
 dA = dmat$A
 dP = dmat$P
 ```
 
-Though no closed form, numerical MLE for $K$ and $P$ can be obtained,
-assuming $A$ and true labels $z$ are known.
+Though no closed form, numerical MLE for $P$ can be obtained, assuming
+$A$ and true labels $z$ are known.
 
 ``` r
 dmat2 = dcsbm_mle(dA,z)
-dKhat = mat2$K
 dPhat = mat2$P
 ```
 
@@ -211,5 +210,5 @@ estimated labels and with true labels.
 dzhat = spectral_dcsbm(dA,4)
 dccrate = ccr(z,dzhat)
 dccrate
-#> [1] 0.49
+#> [1] 0.57
 ```

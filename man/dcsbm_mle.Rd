@@ -12,7 +12,9 @@ dcsbm_mle(A, z)
 \item{z}{community labels}
 }
 \value{
-estimated connection probability matrix (K) and estimated probability matrix (P)
+estimated connection probability matrix (K, up to a scaling constant),
+estimated degree parameter (Theta, up to a scaling constant) and estimated
+probability matrix (P)
 }
 \description{
 Calculate Maximum Likelihood Estimator of Degree Corrected Stochastic
@@ -25,7 +27,7 @@ n = 200
 prob = c(0.8, 0.1)
 K = matrix(prob[2],k,k)
 diag(K) = prob[1]
-Theta = runif(n,0.8,1)
+Theta = runif(n,0.2,1)
 z = rep(1:k,each=n/k)
 A = gen_adj_dcsbm(K,Theta,z)$A
 dcsbm_mle(A,z)
