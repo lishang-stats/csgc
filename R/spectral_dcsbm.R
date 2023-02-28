@@ -6,7 +6,10 @@
 #' @return estimated labels
 #' @export
 #' @importFrom irlba irlba
-#' @importFrom  stats kmeans
+#' @importFrom stats kmeans
+#' @description Tianxi Li, Elizaveta Levina, Ji Zhu and Can M. Le (2022). randnet:
+#' Random Network Model Estimation, Selection and Parameter Tuning. R
+#' package version 0.5. https://CRAN.R-project.org/package=randnet
 #' @examples
 #' library(csgc)
 #' k = 4
