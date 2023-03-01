@@ -3,7 +3,7 @@
 #' @param model an ergm object
 #'
 #' @return adjacency matrix (A) and probability matrix (P)
-#' @import ergm
+#' @importFrom ergm ergm
 #' @export
 #'
 #' @examples

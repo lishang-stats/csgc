@@ -212,3 +212,102 @@ dccrate = ccr(z,dzhat)
 dccrate
 #> [1] 0.57
 ```
+
+## csgc: Compatible with ergm/igraph/fastRG package
+
+Finally, we make the csgc function compatible with other packages so
+that people can have easy access to these values.
+
+For Exponential Random Graph Model, we can extract adjacency matrix (A)
+and predicted probability matrix (P), so that csgc statistics can be
+calculated.
+
+``` r
+library(ergm)
+#> Warning: package 'ergm' was built under R version 4.1.3
+#> Loading required package: network
+#> Warning: package 'network' was built under R version 4.1.3
+#> 
+#> 'network' 1.18.1 (2023-01-24), part of the Statnet Project
+#> * 'news(package="network")' for changes since last version
+#> * 'citation("network")' for citation information
+#> * 'https://statnet.org' for help, support, and other information
+#> 
+#> 'ergm' 4.4.0 (2023-01-26), part of the Statnet Project
+#> * 'news(package="ergm")' for changes since last version
+#> * 'citation("ergm")' for citation information
+#> * 'https://statnet.org' for help, support, and other information
+#> 'ergm' 4 is a major update that introduces some backwards-incompatible
+#> changes. Please type 'news(package="ergm")' for a list of major
+#> changes.
+data("sampson")
+fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
+#> Starting maximum pseudolikelihood estimation (MPLE):
+#> Evaluating the predictor and response matrix.
+#> Maximizing the pseudolikelihood.
+#> Finished MPLE.
+#> Starting Monte Carlo maximum likelihood estimation (MCMLE):
+#> Iteration 1 of at most 60:
+#> Warning: 'glpk' selected as the solver, but package 'Rglpk' is not available;
+#> falling back to 'lpSolveAPI'. This should be fine unless the sample size and/or
+#> the number of parameters is very big.
+#> Optimizing with step length 1.0000.
+#> The log-likelihood improved by 0.6851.
+#> Estimating equations are not within tolerance region.
+#> Iteration 2 of at most 60:
+#> Optimizing with step length 1.0000.
+#> The log-likelihood improved by 0.0321.
+#> Convergence test p-value: 0.0007. Converged with 99% confidence.
+#> Finished MCMLE.
+#> Evaluating log-likelihood at the estimate. Fitting the dyad-independent submodel...
+#> Bridging between the dyad-independent submodel and the full model...
+#> Setting up bridge sampling...
+#> Using 16 bridges: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 .
+#> Bridging finished.
+#> This model was fit using MCMC.  To examine model diagnostics and check
+#> for degeneracy, use the mcmc.diagnostics() function.
+out = A_P_from_ergm(model=fit)
+#> Convert directed graph to undirected graph.
+csgc(out$A, out$P)$t
+#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
+#>     1.7248231     2.9592233     3.9399364    -0.4941677     0.2899158 
+#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
+#>     1.7960435     2.9706588     2.0493010    -0.7953359     0.3729682
+```
+
+For igraph object, we can easily extract adjacency matrix (A). If the
+graph follows a stochastic block model, we can estimate the communities
+size and labels, and estimate probability matrix (P) by maximising
+likelihood.
+
+``` r
+num = 100
+pm = matrix(c(.5, .1, .1, .5), 2, 2)
+bs = c(30, 70)
+g = igraph::sample_sbm(num, pm, bs)
+out = A_P_from_igraph(graph = g)
+csgc(out$A, out$P)$t
+#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
+#>    -0.3425432    -0.8277491     0.9740334    -0.7274614     0.4175829 
+#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
+#>    -0.1415283    -0.3246839    -0.1846036     0.4376713     1.6549416
+```
+
+For fastRG package, we can extract adjacency matrix (A), and find the
+MLE of probability matrix (P) for SBM and DCSBM.
+
+``` r
+set.seed(27)
+k <- 5
+n <- 100
+B <- matrix(stats::runif(k * k), nrow = k, ncol = k)
+theta <- round(stats::rlnorm(n, 2))
+pi <- c(1, 2, 4, 1, 1)
+m1 <- fastRG::dcsbm(theta = theta, B = B, pi = pi, expected_degree = 50)
+out = A_P_from_fastRG(model = m1)
+csgc(out$A, out$P, out$modeltype)$t
+#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
+#>   -2.56812006   -1.32849904    1.97041540    0.35242633    0.09061007 
+#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
+#>    0.08231006   -0.85763019   -2.11039770    0.40929899    0.59129293
+```
