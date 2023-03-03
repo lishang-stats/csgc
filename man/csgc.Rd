@@ -4,14 +4,14 @@
 \alias{csgc}
 \title{Calculate basic centred subgraph counts}
 \usage{
-csgc(A, P, var.structure = c("binomial", "poisson"))
+csgc(A, P, var.structure = c("bernoulli", "poisson"))
 }
 \arguments{
 \item{A}{adjacency matrix}
 
 \item{P}{probability matrix}
 
-\item{var.structure}{allow choose of binomial/poisson model.}
+\item{var.structure}{allow choose of bernoulli/poisson model.}
 }
 \value{
 Unnormalised statistics (V.graph), variance of statistics (vr.graph),
@@ -31,5 +31,5 @@ z = rep(1:k,each=n/k)
 mat = gen_adj_sbm(K,z)
 A = mat$A
 P = mat$P
-csgc(A,P,"binomial")
+csgc(A,P,"bernoulli")
 }

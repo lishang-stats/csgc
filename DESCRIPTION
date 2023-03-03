@@ -20,6 +20,4 @@ Imports:
     rootSolve,
     stats,
     zoo,
-    ergm,
-    fastRG,
-    igraph
+    ergm

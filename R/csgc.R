@@ -2,7 +2,7 @@
 #'
 #' @param A adjacency matrix
 #' @param P probability matrix
-#' @param var.structure allow choose of binomial/poisson model.
+#' @param var.structure allow choose of bernoulli/poisson model.
 #'
 #' @return Unnormalised statistics (V.graph), variance of statistics (vr.graph),
 #' normalised statistics (t.graph)
@@ -19,8 +19,8 @@
 #' mat = gen_adj_sbm(K,z)
 #' A = mat$A
 #' P = mat$P
-#' csgc(A,P,"binomial")
-csgc = function(A, P, var.structure=c("binomial", "poisson")) {
+#' csgc(A,P,"bernoulli")
+csgc = function(A, P, var.structure=c("bernoulli", "poisson")) {
   # INPUT
   # A     = adjacency matrix
   # P     = hypothesised connection probabilities
@@ -36,7 +36,7 @@ csgc = function(A, P, var.structure=c("binomial", "poisson")) {
   # csgc(A,0*A) will return the raw subgraph counts in V
   var.structure = match.arg(var.structure)
 
-  if (var.structure == "binomial"){
+  if (var.structure == "bernoulli"){
     if (sum(A>1)/prod(dim(A)) > 0.01){
       warning("Results may be inaccurate: too many multiedges and selfedges.")
     }

@@ -8,29 +8,34 @@
 #'
 #' @examples
 #' library(ergm)
-#' data("sampson")
-#' fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
+#' data(faux.dixon.high)
+#' fit <- ergm(faux.dixon.high ~ edges + mutual)
 #' out = A_P_from_ergm(model=fit)
 #' out$A
 #' out$P
 A_P_from_ergm <- function(model){
+  message("Please check that the model satisfies the conditional independence of the edges.")
   if (attr(model,"class") == "ergm"){
-    A = as.matrix(get(model$formula[[2]]))
-    if (get.network.attribute(samplike,"hyper")==TRUE){
+    data = get(model$formula[[2]])
+    A = as.matrix(data)
+    if (dim(A)[1]<100){
+      warning("Too few vertices, convergence is not guaranteed for csgc function!")
+    }
+    if (get.network.attribute(data,"hyper")==TRUE){
       stop("Hypergraph cannot be handled by csgc package!")
     }
-    if (get.network.attribute(samplike,"loops")==TRUE){
+    if (get.network.attribute(data,"loops")==TRUE){
       diag(A) = 0
-      message("Remove self-loops.")
+      warning("Remove self-loops.")
     }
-    if (get.network.attribute(samplike,"directed")==TRUE){
+    if (get.network.attribute(data,"directed")==TRUE){
       A[upper.tri(A)] = pmax(A[upper.tri(A)], t(A)[upper.tri(A)])
       A[lower.tri(A)] = t(A)[lower.tri(A)]
-      message("Convert directed graph to undirected graph.")
+      warning("Convert directed graph to undirected graph.")
     }
-    if (get.network.attribute(samplike,"multiple")==TRUE){
+    if (get.network.attribute(data,"multiple")==TRUE){
       A[A>1] = 1
-      message("Convert multigraph to simple graph.")
+      warning("Convert multigraph to simple graph by collapsing edges.")
     }
     P = predict(model,output="matrix")
   } else{

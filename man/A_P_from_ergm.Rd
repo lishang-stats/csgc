@@ -17,8 +17,8 @@ Extract adjacency and probability matrix from ergm object
 }
 \examples{
 library(ergm)
-data("sampson")
-fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
+data(faux.dixon.high)
+fit <- ergm(faux.dixon.high ~ edges + mutual)
 out = A_P_from_ergm(model=fit)
 out$A
 out$P
