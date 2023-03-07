@@ -14,7 +14,7 @@
 #' Z<-diag(Q)%x%matrix(1,npc,1)
 #' P<-matrix(runif(Q*Q),Q,Q)
 #' M<-1*(matrix(runif(n*n),n,n)<Z%*%P%*%t(Z)) ## adjacency matrix
-#' fit <- BM_bernoulli("SBM",M )
+#' fit <- BM_bernoulli("SBM",M, plotting='')
 #' out = A_P_from_blockmodels(model=fit)
 #' out$A
 #' out$P
@@ -28,7 +28,7 @@ A_P_from_blockmodels <- function(model){
       A[lower.tri(A)] = t(A)[lower.tri(A)]
       warning("Convert directed graph to undirected graph.")
     }
-    model$estimate()
+    sink('NUL'); model$estimate(); sink()
     k = which.max(model$ICL)
     z = apply(model$memberships[[k]]$Z,1,which.max)
     K = model$model_parameters[[k]]$pi

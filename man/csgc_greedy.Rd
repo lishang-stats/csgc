@@ -4,14 +4,14 @@
 \alias{csgc_greedy}
 \title{Csgc greedy algorithm}
 \usage{
-csgc_greedy(A, z0, var.structure = "binomial", parallel = F)
+csgc_greedy(A, z0, var.structure = "bernoulli", parallel = F)
 }
 \arguments{
 \item{A}{adjacency matrix}
 
 \item{z0}{initial community labels}
 
-\item{var.structure}{allow choose of binomial/poisson model, default is binomial}
+\item{var.structure}{allow choose of bernoulli/poisson model, default is bernoulli}
 
 \item{parallel}{allow use parallel computing, default is FALSE}
 }

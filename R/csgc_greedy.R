@@ -3,7 +3,7 @@
 #' and the corresponding chi-square statistics, under stochastic block model
 #' @param A adjacency matrix
 #' @param z0 initial community labels
-#' @param var.structure allow choose of binomial/poisson model, default is binomial
+#' @param var.structure allow choose of bernoulli/poisson model, default is bernoulli
 #' @param parallel allow use parallel computing, default is FALSE
 #'
 #' @return A list of initial/optimized/record values
@@ -34,12 +34,12 @@
 #' A = gen_adj_sbm(K,z)$A
 #' z0 = spectral_sbm(A,k)
 #' csgc_greedy(A,z0)
-csgc_greedy <- function(A,z0,var.structure="binomial",parallel=F){
+csgc_greedy <- function(A,z0,var.structure="bernoulli",parallel=F){
   # required package: purrr, foreach, doParallel
   # INPUT
   # A  = adjacency matrix
   # z0 = estimated labels using other methods (e.g. spectral clustering)
-  # var.structure = allow "binomial" or "poisson" when using csgc function
+  # var.structure = allow "bernoulli" or "poisson" when using csgc function
   # parallel = whether to use multiple CPUs
   #
   # OUTPUT

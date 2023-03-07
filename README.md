@@ -15,7 +15,7 @@ You can install the development version of csgc from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("lishang-stats/csgc")
 ```
 
@@ -77,7 +77,7 @@ statistics are deviate from 0 or not.
 
 ``` r
 Phat2 = sbm_mle(A,zhat)$P
-t = csgc(A,Phat2,"binomial")$t
+t = csgc(A,Phat2,"bernoulli")$t
 t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
 #>     21.025806      2.647350     19.910428     -7.621849      1.819534 
@@ -213,16 +213,15 @@ dccrate
 #> [1] 0.57
 ```
 
-## csgc: Compatible with ergm/igraph/fastRG package
+## csgc: Compatible with ergm/blockmodels/greed package
 
 Finally, we make the csgc function compatible with other packages so
-that people can have easy access to these values.
-
-For Exponential Random Graph Model, we can extract adjacency matrix (A)
-and predicted probability matrix (P), so that csgc statistics can be
-calculated.
+that people can have easy access to these values. Before that, we will
+need the following packages: “ergm”, “blockmodels”, “greed” and
+“igraphdata”.
 
 ``` r
+# install.packages(c("ergm", "blockmodels", "greed", "igraphdata"))
 library(ergm)
 #> Warning: package 'ergm' was built under R version 4.1.3
 #> Loading required package: network
@@ -240,8 +239,21 @@ library(ergm)
 #> 'ergm' 4 is a major update that introduces some backwards-incompatible
 #> changes. Please type 'news(package="ergm")' for a list of major
 #> changes.
-data("sampson")
-fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
+library(blockmodels)
+#> Warning: package 'blockmodels' was built under R version 4.1.3
+library(greed)
+#> Warning: package 'greed' was built under R version 4.1.3
+library(igraphdata)
+#> Warning: package 'igraphdata' was built under R version 4.1.3
+```
+
+For Exponential Random Graph Model, we can extract adjacency matrix (A)
+and predicted probability matrix (P), so that csgc statistics can be
+calculated.
+
+``` r
+data(faux.dixon.high)
+fit <- ergm(faux.dixon.high ~ edges + mutual)
 #> Starting maximum pseudolikelihood estimation (MPLE):
 #> Evaluating the predictor and response matrix.
 #> Maximizing the pseudolikelihood.
@@ -252,12 +264,20 @@ fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
 #> falling back to 'lpSolveAPI'. This should be fine unless the sample size and/or
 #> the number of parameters is very big.
 #> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.6851.
+#> The log-likelihood improved by 0.1044.
 #> Estimating equations are not within tolerance region.
 #> Iteration 2 of at most 60:
 #> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.0321.
-#> Convergence test p-value: 0.0007. Converged with 99% confidence.
+#> The log-likelihood improved by 0.0149.
+#> Convergence test p-value: 0.2137. Not converged with 99% confidence; increasing sample size.
+#> Iteration 3 of at most 60:
+#> Optimizing with step length 1.0000.
+#> The log-likelihood improved by 0.0055.
+#> Convergence test p-value: 0.1013. Not converged with 99% confidence; increasing sample size.
+#> Iteration 4 of at most 60:
+#> Optimizing with step length 1.0000.
+#> The log-likelihood improved by 0.0086.
+#> Convergence test p-value: 0.0004. Converged with 99% confidence.
 #> Finished MCMLE.
 #> Evaluating log-likelihood at the estimate. Fitting the dyad-independent submodel...
 #> Bridging between the dyad-independent submodel and the full model...
@@ -267,47 +287,81 @@ fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
 #> This model was fit using MCMC.  To examine model diagnostics and check
 #> for degeneracy, use the mcmc.diagnostics() function.
 out = A_P_from_ergm(model=fit)
-#> Convert directed graph to undirected graph.
+#> Please check that the model satisfies the conditional independence of the edges.
+#> Warning in A_P_from_ergm(model = fit): Convert directed graph to undirected
+#> graph.
 csgc(out$A, out$P)$t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>     1.7248231     2.9592233     3.9399364    -0.4941677     0.2899158 
+#>      59.44493      58.08698      52.10575     172.33406     142.63847 
 #> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>     1.7960435     2.9706588     2.0493010    -0.7953359     0.3729682
+#>     288.70898     263.77521     196.90719     494.24833     330.52454
 ```
 
-For igraph object, we can easily extract adjacency matrix (A). If the
-graph follows a stochastic block model, we can estimate the communities
-size and labels, and estimate probability matrix (P) by maximising
-likelihood.
+For “blockmodels” object, we can easily extract adjacency matrix (A).
+The “blockmodels” package will estimate the number of communities (k),
+labels (z) and parameter matrix (K). From that, we can get the estimate
+probability matrix (P).
 
 ``` r
-num = 100
-pm = matrix(c(.5, .1, .1, .5), 2, 2)
-bs = c(30, 70)
-g = igraph::sample_sbm(num, pm, bs)
-out = A_P_from_igraph(graph = g)
-csgc(out$A, out$P)$t
-#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>    -0.3425432    -0.8277491     0.9740334    -0.7274614     0.4175829 
-#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>    -0.1415283    -0.3246839    -0.1846036     0.4376713     1.6549416
-```
-
-For fastRG package, we can extract adjacency matrix (A), and find the
-MLE of probability matrix (P) for SBM and DCSBM.
-
-``` r
-set.seed(27)
-k <- 5
-n <- 100
-B <- matrix(stats::runif(k * k), nrow = k, ncol = k)
-theta <- round(stats::rlnorm(n, 2))
-pi <- c(1, 2, 4, 1, 1)
-m1 <- fastRG::dcsbm(theta = theta, B = B, pi = pi, expected_degree = 50)
-out = A_P_from_fastRG(model = m1)
+npc <- 30 # nodes per class
+Q <- 3 # classes
+n <- npc * Q # nodes
+Z<-diag(Q)%x%matrix(1,npc,1)
+P<-matrix(runif(Q*Q),Q,Q)
+M<-1*(matrix(runif(n*n),n,n)<Z%*%P%*%t(Z)) ## adjacency matrix
+fit <- BM_bernoulli("SBM",M, plotting='')
+out = A_P_from_blockmodels(model=fit)
+#> Warning in A_P_from_blockmodels(model = fit): Convert directed graph to
+#> undirected graph.
 csgc(out$A, out$P, out$modeltype)$t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>   -2.56812006   -1.32849904    1.97041540    0.35242633    0.09061007 
+#>      168.0086       47.8541      147.0930      772.9239      637.9753 
 #> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>    0.08231006   -0.85763019   -2.11039770    0.40929899    0.59129293
+#>      412.1523      184.2586      664.6843     3399.3193     1982.8962
+```
+
+We can also use “greed” package to do model fitting for SBM and DCSBM.
+
+``` r
+data(Books)
+sbm = greed(Books$X, model = Sbm())
+#> 
+#> -- Fitting a guess SBM model --
+#> 
+#> i Initializing a population of 20 solutions.
+#> i Generation 1 : best solution with an ICL of -1288 and 8 clusters.
+#> i Generation 2 : best solution with an ICL of -1265 and 5 clusters.
+#> i Generation 3 : best solution with an ICL of -1252 and 6 clusters.
+#> i Generation 4 : best solution with an ICL of -1252 and 6 clusters.
+#> -- Final clustering --
+#> 
+#> -- Clustering with a SBM model 5 clusters and an ICL of -1252
+out1 = A_P_from_greed(data=Books$X, blockmodel=sbm)
+csgc(out1$A, out1$P, out1$modeltype)$t
+#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
+#>      2.263220     11.580318     12.319644     -3.216177      2.908685 
+#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
+#>     -4.430619      7.105445     13.433744     -1.560810     -1.139197
+```
+
+``` r
+data(karate)
+dcsbm = greed(karate, model= DcSbm())
+#> Warning: Sbm model used with an igraph object. Vertex and nodes attributes were
+#> removed, the clustering will only use the adjacency matrix.
+#> 
+#> -- Fitting a guess DCSBM model --
+#> 
+#> i Initializing a population of 20 solutions.
+#> i Generation 1 : best solution with an ICL of -227 and 1 clusters.
+#> i Generation 2 : best solution with an ICL of -227 and 1 clusters.
+#> -- Final clustering --
+#> 
+#> -- Clustering with a DCSBM model 1 clusters and an ICL of -227
+out2 = A_P_from_greed(data=karate, blockmodel=dcsbm)
+csgc(out2$A, out2$P, out2$modeltype)$t
+#>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
+#>    -2.4185709    -2.2530913     2.4026465     1.9677440     0.6853484 
+#> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
+#>    -1.7426575    -9.2650511    10.3745336     1.3081061     0.9861794
 ```

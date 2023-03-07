@@ -25,7 +25,7 @@ The goal of csgc is to perform statistical analysis of network data based on cen
 You can install the development version of csgc from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
+install.packages("devtools")
 devtools::install_github("lishang-stats/csgc")
 ```
 
@@ -70,7 +70,7 @@ If we use the estimated labels to further get the MLE for $P$, we can calculate 
 
 ```{r csgc}
 Phat2 = sbm_mle(A,zhat)$P
-t = csgc(A,Phat2,"binomial")$t
+t = csgc(A,Phat2,"bernoulli")$t
 t
 ```
 
@@ -120,38 +120,51 @@ dccrate = ccr(z,dzhat)
 dccrate
 ```
 
-## csgc: Compatible with ergm/igraph/fastRG package
-Finally, we make the csgc function compatible with other packages so that people can have easy access to these values.
+## csgc: Compatible with ergm/blockmodels/greed package
+Finally, we make the csgc function compatible with other packages so that people can have easy access to these values. Before that, we will need the following packages: "ergm", "blockmodels", "greed" and "igraphdata".
+
+```{r install_packages}
+# install.packages(c("ergm", "blockmodels", "greed", "igraphdata"))
+library(ergm)
+library(blockmodels)
+library(greed)
+library(igraphdata)
+```
 
 For Exponential Random Graph Model, we can extract adjacency matrix (A) and predicted probability matrix (P), so that csgc statistics can be calculated.
 
 ```{r ergm}
-library(ergm)
-data("sampson")
-fit <- ergm(samplike ~ edges + cycle(4,semi=TRUE))
+data(faux.dixon.high)
+fit <- ergm(faux.dixon.high ~ edges + mutual)
 out = A_P_from_ergm(model=fit)
 csgc(out$A, out$P)$t
 ```
-For igraph object, we can easily extract adjacency matrix (A). If the graph follows a stochastic block model, we can estimate the communities size and labels, and estimate probability matrix (P) by maximising likelihood. 
 
-```{r igraph}
-num = 100
-pm = matrix(c(.5, .1, .1, .5), 2, 2)
-bs = c(30, 70)
-g = igraph::sample_sbm(num, pm, bs)
-out = A_P_from_igraph(graph = g)
-csgc(out$A, out$P)$t
-```
-For fastRG package, we can extract adjacency matrix (A), and find the MLE of probability matrix (P) for SBM and DCSBM.
+For "blockmodels" object, we can easily extract adjacency matrix (A). The "blockmodels" package will estimate the number of communities (k), labels (z) and parameter matrix (K). From that, we can get the estimate probability matrix (P). 
 
-```{r fastRG}
-set.seed(27)
-k <- 5
-n <- 100
-B <- matrix(stats::runif(k * k), nrow = k, ncol = k)
-theta <- round(stats::rlnorm(n, 2))
-pi <- c(1, 2, 4, 1, 1)
-m1 <- fastRG::dcsbm(theta = theta, B = B, pi = pi, expected_degree = 50)
-out = A_P_from_fastRG(model = m1)
+```{r blockmodels}
+npc <- 30 # nodes per class
+Q <- 3 # classes
+n <- npc * Q # nodes
+Z<-diag(Q)%x%matrix(1,npc,1)
+P<-matrix(runif(Q*Q),Q,Q)
+M<-1*(matrix(runif(n*n),n,n)<Z%*%P%*%t(Z)) ## adjacency matrix
+fit <- BM_bernoulli("SBM",M, plotting='')
+out = A_P_from_blockmodels(model=fit)
 csgc(out$A, out$P, out$modeltype)$t
+```
+We can also use "greed" package to do model fitting for SBM and DCSBM.
+
+```{r greed1}
+data(Books)
+sbm = greed(Books$X, model = Sbm())
+out1 = A_P_from_greed(data=Books$X, blockmodel=sbm)
+csgc(out1$A, out1$P, out1$modeltype)$t
+```
+
+```{r greed2}
+data(karate)
+dcsbm = greed(karate, model= DcSbm())
+out2 = A_P_from_greed(data=karate, blockmodel=dcsbm)
+csgc(out2$A, out2$P, out2$modeltype)$t
 ```

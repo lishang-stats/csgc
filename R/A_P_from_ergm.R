@@ -4,6 +4,7 @@
 #'
 #' @return adjacency matrix (A) and probability matrix (P)
 #' @importFrom ergm ergm
+#' @importFrom network get.network.attribute
 #' @export
 #'
 #' @examples
