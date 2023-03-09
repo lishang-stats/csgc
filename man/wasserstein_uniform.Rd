@@ -13,7 +13,7 @@ wasserstein_uniform(p)
 2 times the Wasserstein distance
 }
 \description{
-Calculate Wasserstein distance between uniform distribution on \link{0,1} and
+Calculate Wasserstein distance between uniform distribution on (0,1) and
 the target distribution from 0 to 1 (for example a sequence of p-values)
 }
 \examples{

@@ -16,7 +16,7 @@ estimated connection probability matrix (K) and estimated probability matrix (P)
 }
 \description{
 Calculate Maximum Likelihood Estimator of Stochastic Block Model,
-using binomial model assuming simple graph without self-loop.
+using bernoulli model assuming simple graph without self-loop.
 }
 \examples{
 library(csgc)

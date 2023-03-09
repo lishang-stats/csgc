@@ -1,6 +1,6 @@
 #' Calculate Maximum Likelihood Estimator of Stochastic Block Model
 #' @description Calculate Maximum Likelihood Estimator of Stochastic Block Model,
-#' using binomial model assuming simple graph without self-loop.
+#' using bernoulli model assuming simple graph without self-loop.
 #' @param A adjacency matrix
 #' @param z community labels
 #'

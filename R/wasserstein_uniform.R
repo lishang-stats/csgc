@@ -1,5 +1,5 @@
 #' Calculate Wasserstein distance between uniform distribution and target distribution
-#' @description Calculate Wasserstein distance between uniform distribution on [0,1] and
+#' @description Calculate Wasserstein distance between uniform distribution on (0,1) and
 #' the target distribution from 0 to 1 (for example a sequence of p-values)
 #'
 #' @param p a sequence of values from 0 to 1
