@@ -222,8 +222,7 @@ dccrate
 
 Finally, we make the csgc function compatible with other packages so
 that people can have easy access to these values. Before that, we will
-need the following packages: “ergm”, “blockmodels”, “greed” and
-“igraphdata”.
+need the following packages: “ergm”, “blockmodels” and “greed”.
 
 ``` r
 # install.packages(c("ergm", "blockmodels", "greed", "igraphdata"))
@@ -341,6 +340,7 @@ csgc(out1$A, out1$P, out1$modeltype)$t
 ```
 
 ``` r
+library(igraphdata)
 data(karate)
 dcsbm = greed(karate, model= DcSbm())
 #> Warning: Sbm model used with an igraph object. Vertex and nodes attributes were

@@ -126,7 +126,7 @@ dccrate
 ```
 
 ## csgc: Compatible with ergm/blockmodels/greed package
-Finally, we make the csgc function compatible with other packages so that people can have easy access to these values. Before that, we will need the following packages: "ergm", "blockmodels", "greed" and "igraphdata".
+Finally, we make the csgc function compatible with other packages so that people can have easy access to these values. Before that, we will need the following packages: "ergm", "blockmodels" and "greed".
 
 ```{r install_packages}
 # install.packages(c("ergm", "blockmodels", "greed", "igraphdata"))
@@ -168,6 +168,7 @@ csgc(out1$A, out1$P, out1$modeltype)$t
 ```
 
 ```{r greed2}
+library(igraphdata)
 data(karate)
 dcsbm = greed(karate, model= DcSbm())
 out2 = A_P_from_greed(data=karate, blockmodel=dcsbm)
