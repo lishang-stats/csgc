@@ -66,7 +66,7 @@ ccrate = ccr(z,zhat)
 ccrate
 ```
 
-If we use the estimated labels to further get the MLE for $P$, we can calculate the centred subgraph count statistics and check if these statistics are deviate from 0 or not.
+If we use the estimated labels to further get the MLE for $P$, we can calculate the centred subgraph count statistics and check if these statistics deviate from 0 or not.
 
 ```{r csgc}
 Phat2 = sbm_mle(A,zhat)$P
@@ -77,11 +77,16 @@ t
 Sum of squares of these statistics should approximately follow a chi-square distribution if SBM fits the network data. Suppose we run the above simulation multiple times, we can get a batch of $p$-values, which are supposed to follow a uniform distribution. We can calculate the Wasserstein distance between these $p$-values and a uniform distribution on [0,1].
 
 ```{r dw}
-p = runif(100)
+p = numeric(100)
+for (i in 1:100){
+  A1 = gen_adj_sbm(K,z)$A
+  t = csgc(A1,sbm_mle(A1,z)$P,"bernoulli")$t
+  p[i] = pchisq(sum(t^2), 10, lower.tail = FALSE)
+}
 wasserstein_uniform(p)
 ```
 
-If these csgc statistics are deviate from 0, we can use our csgc greedy algorithm to adjust label estimations, and see if correct classification rate increases.
+If these csgc statistics deviate from 0, we can use our csgc greedy algorithm to adjust label estimations, and see if correct classification rate increases.
 
 ```{r greedy}
 out = csgc_greedy(A,zhat,parallel=T)
@@ -109,7 +114,7 @@ Though no closed form, numerical MLE for $P$ can be obtained, assuming $A$ and t
 
 ```{r dcsbm_mle}
 dmat2 = dcsbm_mle(dA,z)
-dPhat = mat2$P
+dPhat = dmat2$P
 ```
 
 Using spectral clustering method for DCSBM, we can also get the estimated labels and with true labels.

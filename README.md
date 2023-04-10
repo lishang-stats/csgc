@@ -73,7 +73,7 @@ ccrate
 
 If we use the estimated labels to further get the MLE for $P$, we can
 calculate the centred subgraph count statistics and check if these
-statistics are deviate from 0 or not.
+statistics deviate from 0 or not.
 
 ``` r
 Phat2 = sbm_mle(A,zhat)$P
@@ -93,12 +93,17 @@ Wasserstein distance between these $p$-values and a uniform distribution
 on \[0,1\].
 
 ``` r
-p = runif(100)
+p = numeric(100)
+for (i in 1:100){
+  A1 = gen_adj_sbm(K,z)$A
+  t = csgc(A1,sbm_mle(A1,z)$P,"bernoulli")$t
+  p[i] = pchisq(sum(t^2), 10, lower.tail = FALSE)
+}
 wasserstein_uniform(p)
-#> [1] 0.07193143
+#> [1] 0.1996285
 ```
 
-If these csgc statistics are deviate from 0, we can use our csgc greedy
+If these csgc statistics deviate from 0, we can use our csgc greedy
 algorithm to adjust label estimations, and see if correct classification
 rate increases.
 
@@ -200,7 +205,7 @@ $A$ and true labels $z$ are known.
 
 ``` r
 dmat2 = dcsbm_mle(dA,z)
-dPhat = mat2$P
+dPhat = dmat2$P
 ```
 
 Using spectral clustering method for DCSBM, we can also get the
@@ -210,7 +215,7 @@ estimated labels and with true labels.
 dzhat = spectral_dcsbm(dA,4)
 dccrate = ccr(z,dzhat)
 dccrate
-#> [1] 0.57
+#> [1] 0.49
 ```
 
 ## csgc: Compatible with ergm/blockmodels/greed package
@@ -264,20 +269,12 @@ fit <- ergm(faux.dixon.high ~ edges + mutual)
 #> falling back to 'lpSolveAPI'. This should be fine unless the sample size and/or
 #> the number of parameters is very big.
 #> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.1044.
-#> Estimating equations are not within tolerance region.
+#> The log-likelihood improved by 0.0304.
+#> Convergence test p-value: 0.3016. Not converged with 99% confidence; increasing sample size.
 #> Iteration 2 of at most 60:
 #> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.0149.
-#> Convergence test p-value: 0.2137. Not converged with 99% confidence; increasing sample size.
-#> Iteration 3 of at most 60:
-#> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.0055.
-#> Convergence test p-value: 0.1013. Not converged with 99% confidence; increasing sample size.
-#> Iteration 4 of at most 60:
-#> Optimizing with step length 1.0000.
-#> The log-likelihood improved by 0.0086.
-#> Convergence test p-value: 0.0004. Converged with 99% confidence.
+#> The log-likelihood improved by 0.0430.
+#> Convergence test p-value: 0.0012. Converged with 99% confidence.
 #> Finished MCMLE.
 #> Evaluating log-likelihood at the estimate. Fitting the dyad-independent submodel...
 #> Bridging between the dyad-independent submodel and the full model...
@@ -292,9 +289,9 @@ out = A_P_from_ergm(model=fit)
 #> graph.
 csgc(out$A, out$P)$t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>      59.44493      58.08698      52.10575     172.33406     142.63847 
+#>      59.44233      58.13349      52.32496     172.34371     142.62009 
 #> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>     288.70898     263.77521     196.90719     494.24833     330.52454
+#>     288.92686     264.16784     197.18525     494.36571     330.54601
 ```
 
 For “blockmodels” object, we can easily extract adjacency matrix (A).
@@ -315,9 +312,9 @@ out = A_P_from_blockmodels(model=fit)
 #> undirected graph.
 csgc(out$A, out$P, out$modeltype)$t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>      168.0086       47.8541      147.0930      772.9239      637.9753 
+#>      84.53258      40.94152     162.60744     326.20236    1896.20998 
 #> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>      412.1523      184.2586      664.6843     3399.3193     1982.8962
+#>     427.65261    1187.47921     581.77047     683.47687    9040.87610
 ```
 
 We can also use “greed” package to do model fitting for SBM and DCSBM.
@@ -329,19 +326,18 @@ sbm = greed(Books$X, model = Sbm())
 #> -- Fitting a guess SBM model --
 #> 
 #> i Initializing a population of 20 solutions.
-#> i Generation 1 : best solution with an ICL of -1288 and 8 clusters.
-#> i Generation 2 : best solution with an ICL of -1265 and 5 clusters.
-#> i Generation 3 : best solution with an ICL of -1252 and 6 clusters.
-#> i Generation 4 : best solution with an ICL of -1252 and 6 clusters.
+#> i Generation 1 : best solution with an ICL of -1278 and 7 clusters.
+#> i Generation 2 : best solution with an ICL of -1254 and 6 clusters.
+#> i Generation 3 : best solution with an ICL of -1254 and 6 clusters.
 #> -- Final clustering --
 #> 
-#> -- Clustering with a SBM model 5 clusters and an ICL of -1252
+#> -- Clustering with a SBM model 5 clusters and an ICL of -1254
 out1 = A_P_from_greed(data=Books$X, blockmodel=sbm)
 csgc(out1$A, out1$P, out1$modeltype)$t
 #>     t.twostar    t.triangle   t.fourcycle   t.threepath   t.threestar 
-#>      2.263220     11.580318     12.319644     -3.216177      2.908685 
+#>     2.1604290    11.5804480    13.0885441    -3.5990661     2.7017219 
 #> t.triangleapp t.twotriangle   t.fivecycle    t.fourpath    t.fourstar 
-#>     -4.430619      7.105445     13.433744     -1.560810     -1.139197
+#>    -4.5114451     7.7160612    15.5304911    -0.9049469    -1.3578917
 ```
 
 ``` r
@@ -353,8 +349,9 @@ dcsbm = greed(karate, model= DcSbm())
 #> -- Fitting a guess DCSBM model --
 #> 
 #> i Initializing a population of 20 solutions.
-#> i Generation 1 : best solution with an ICL of -227 and 1 clusters.
+#> i Generation 1 : best solution with an ICL of -229 and 2 clusters.
 #> i Generation 2 : best solution with an ICL of -227 and 1 clusters.
+#> i Generation 3 : best solution with an ICL of -227 and 1 clusters.
 #> -- Final clustering --
 #> 
 #> -- Clustering with a DCSBM model 1 clusters and an ICL of -227
