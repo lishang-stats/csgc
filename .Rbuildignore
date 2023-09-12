@@ -1,6 +1,2 @@
-^renv$
-^renv\.lock$
-^csgc\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
-^README\.Rmd$
-^LICENSE\.md$
