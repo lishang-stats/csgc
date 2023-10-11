@@ -11,13 +11,16 @@ based on centred subgraph counts.
 
 ## Installation
 
-You can install the development version of csgc from
+You can install the development version of csgc R package from
 [GitHub](https://github.com/) with:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("lishang-stats/csgc")
 ```
+
+See also "csgc.py" file for the Python version and test code, which
+allows GPU acceleration.
 
 ## csgc: SBM
 
